@@ -1,22 +1,21 @@
 #!/usr/bin/env sh
-set -o
-
 repos='spec dev-website brand liboparl validator resources'
 
 mkdir -p build
 cd build
-for $repo in $repos
+for repo in $repos
 do
-    echo $repo
-    #if [ -d $repo ]
-    #then
-    #    git -C $repo pull --rebase --autostash
-    #else
-    #    git clone https://github.com/OParl/$repo.git $repo
-    #fi
+    if [ -d $repo ]
+    then
+        git -C $repo pull --rebase --autostash
+    else
+        git clone https://github.com/OParl/$repo.git $repo
+    fi
 
-    #gource --output-custom-log $repo.log $repo/
+    gource --output-custom-log $repo.log $repo/
 done
 
-cat *.log | sort -n > ../combined.log
+cd ..
 
+cat build/*.log | sort -n > combined.log
+gource -c 4.0 -s 5 --hide-root -f combined.log
